@@ -8,11 +8,19 @@ module.exports = async function handler(req, res) {
 
     try {
         const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+            'https://api.groq.com/openai/v1/chat/completions',
             {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(req.body)
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.GROQ_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: 'llama-3.1-8b-instant',
+                    messages: req.body.messages,
+                    max_tokens: 1024,
+                    temperature: 0.7
+                })
             }
         );
         const data = await response.json();
